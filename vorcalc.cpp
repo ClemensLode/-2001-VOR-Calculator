@@ -29,71 +29,55 @@ andere rassen einfuegen
 // 1: Initialize all 0
 // 2: Initialize all with 1 Std Infantry Troup
 
-#define MUTATIONS 10
-#define MUTATION_FAKTOR 100
+#define MUTATIONS 100
+#define MUTATION_FAKTOR 500
 
-#define MAX_UNITS 30
+#define MAX_UNITS 25
 
+#define EMPTY 0
+#define COMMANDER 1
+#define SERGEANT 2
+#define STDINFANTRY 3
+#define ELITEINFANTRY 4
+#define SCOUTINFANTRY 5
+#define SPECIALFORCE 6
+#define ATDDRONE 7
+#define HTDDRONE 8
+#define ARES 9
+#define SUPPLYDRONE 10
+#define WENDIGO 11
+#define FENRIS 12
+#define ODIN 13
+#define LOKI 13
 
 #define SMALL 0
 #define MEDIUM 1
 #define LARGE 2
 
+//...
 
-#define EMPTY				0
-#define STDINF				1
-#define STDINF_DRACO		2
-#define STDINF_ROTT			3
-#define STDINF_BULLDOG		4
-#define STDINF_DRACO+BULL	5
-#define STDINF_ROTT+BULL	6
-#define ELITE				7
-#define ELITE_DRACO			8
-#define ELITE_ROTT			9
-#define ELITE_2xBULL		10
-#define ELITE_DRACO+2xBULL	11
-#define ELITE_ROTT+2xBULL	12
-#define SCOUT				13
-#define SCOUT_SNIPER		14
-#define LARGE_SCOUT_SNIP_GR 15
-#define ARES				16
-#define ARES_QUAD			17
-#define ARES_PLASMA			18
-#define ARES_HARBINGER		19
-#define MULE				20
-#define HDT					21
-#define ADT					22
-#define ARMORED				23
-#define ARMORED_2xBULLDOG	24
-#define ARMORED_2xROTT		25
-#define ARMORED_2xDRACO		26
-#define SPECIAL_FORCES		27
-#define SPECIAL_DRACO		28
-#define SPECIAL_SNIPER		29
-#define SPECIAL_BULLDOG		30
-#define SPECIAL_ROTT		31
-#define SPECIAL_SNIP_DRACO  32
-#define DE_SPECIAL_FORCES	33	
-#define DE_SPECIAL_DRACO	34	
-#define DE_SPECIAL_SNIPER	35	
-#define DE_SPECIAL_BULLDOG  36		
-#define DE_SPECIAL_ROTT		37
-#define DE_SPECIAL_SNIP_DRACO 38
-#define BRAWLER				39
-#define COMMANDER			40
- 
+#define PITBULL 0
+#define ROTTWEILER 1
+#define DRACO 2
+#define BULLDOG 3
+#define SNIPER 4
+#define HARBINGER 5
+#define PLASMA 6
+#define QUAD 7
+#define APE 8
+#define MASTIFF 9
+#define DART 10
 
- 
 
 
 #define MAX_PLAYER 200
 
-#define TROUP_TYPES 11
-#define WEAPON_TYPES 9
+#define TROUP_TYPES 15
+#define WEAPON_TYPES 11
 
-#define REPRODUCTION 15
+#define REPRODUCTION 20
 
-#define MAX_GENERATIONS 100
+#define MAX_GENERATIONS 50
 
 unsigned char run,y,rfit;
 unsigned short afit;
@@ -101,10 +85,17 @@ unsigned short PTS;
 
 struct save
 {
-	unsigned char force[TROUP_TYPES];
+	struct Unit
+	{
+		unsigned char type;
+		unsigned char S;//Special Abilities and Armament
+	} unit[MAX_UNITS];
 	unsigned short fitness;
 	unsigned short PTs;
+	unsigned char force[TROUP_TYPES];
+	unsigned char weaps[TROUP_TYPES][WEAPON_TYPES];
 } Save[RUNNINGS];
+
 
 
 struct s_Name
@@ -112,79 +103,18 @@ struct s_Name
 	char Name[20];
 };
 
-struct STATS
-{
-	unsigned char power,damage,tohit,am,autom;
-	unsigned short cost;
-	s_Name name;
-};
-Neee
-const STATS stats[TROUP_TYPES]=
-{
-	{0,0,0,0,0,0,"EMPTY"},
-	{4,10,52,1,0,177,"Standard Infantry"},
-
-	{4,10,52,1,0,177,"Standard Infantry"},
-	{4,10,52,1,0,177,"Standard Infantry"},
-	{4,10,52,1,0,177,"Standard Infantry"},
-	{4,10,52,1,0,177,"Standard Infantry"},
-
-	#define EMPTY				1
-#define STDINF				177
-#define STDINF DRACO		242
-#define STDINF ROTT			229
-#define STDINF BULLDOG		197
-#define STDINF DRACO+BULL	262
-#define STDINF ROTT+BULL	249
-
-#define ELITE				209
-#define ELITE DRACO			274
-#define ELITE ROTT			261
-#define ELITE 2xBULL		249
-#define ELITE DRACO+2xBULL	314
-#define ELITE ROTT+2xBULL	301
-
-#define SCOUT				44
-#define SCOUT SNIPER		99
-#define LARGE SCOUT SNIP/GR 163 
-
-#define ARES				120
-#define ARES QUAD			170
-#define ARES PLASMA			165
-#define ARES HARBINGER		175
-
-#define MULE				45
-#define HDT					125
-#define ADT					165
-
-#define ARMORED				329
-#define ARMORED 2xBULLDOG	369
-#define ARMORED 2xROTT		433
-#define ARMORED 2xDRACO		459
-
-#define SPECIAL FORCES		152
-#define SPECIAL DRACO		412
-#define SPECIAL SNIPER		372
-#define SPECIAL BULLDOG		232
-#define SPECIAL ROTT		360
-#define SPECIAL SNIP/DRACO  392
-
-
-#define DE SPECIAL FORCES		200
-#define DESPECIAL DRACO		460
-#define DESPECIAL SNIPER		420
-#define DESPECIAL BULLDOG		280
-#define DESPECIAL ROTT		408
-#define DESPECIAL SNIP/DRACO  440
-
-#define BRAWLER				153
-
-#define COMMANDER			 90
-
-
 const s_Name nameT[TROUP_TYPES]=
+{"EMPTY","Commander","Sergeant","Std. Infantry","Elite Infantry","Scout Squad","Special Forces","ADT Drone Squad","HTD Drone","Ares","SUPPLYDRONE","WENDIGO","FENRIS","ODIN","LOKI"};
 
-{"EMPTY","STDINF","STDINF DRACO","STDINF ROTT","STDINF BULLDOG","STDINF DRACO+BULL","STDINF ROTT+BULL","ELITE","ELITE DRACO","ELITE ROTT","ELITE 2xBULL","ELITE DRACO+2xBULL","ELITE ROTT+2xBULL","SCOUT","SCOUT SNIPER","LARGE SCOUT SNIP/GR","ARES","ARES QUAD","ARES PLASMA","ARES HARBINGER","SUPPLY MULE","HDT","ADT","ARMORED","ARMORED 2xBULLDOG","ARMORED 2xROTT","ARMORED 2xDRACO","SPECIAL FORCES","SPECIAL DRACO","SPECIAL SNIPER","SPECIAL BULLDOG","SPECIAL ROTT","SPECIAL SNIP/DRACO","DE: SPECIAL FORCES","DE: SPECIAL DRACO","DE: SPECIAL SNIPER","DE: SPECIAL BULLDOG","DE: SPECIAL ROTT","DE: SPECIAL SNIP/DRACO","DE: BRAWLER","DE: COMMANDER"}
+const s_Name nameTs[TROUP_TYPES]=
+{"-","Com","Ser","Std","Elt","Sct","SpF","ADT","HTD","Are","Sup","WEN","FEN","ODI","LOK"};
+
+const s_Name nameW[WEAPON_TYPES]=
+{"Pitbull","Rottweiler HMG","Draco","Bulldog","Sniper","Harbinger","Plasma","Quad Missile","Ape","Mastiff","Dart"};
+
+const s_Name nameWs[WEAPON_TYPES]=
+{"P","R","D","B","S","H","Pl","Q","A","Ma","Da"};
+
 
 struct s_EStatistics
 {
@@ -207,15 +137,19 @@ const s_TStatistics Tstats[TROUP_TYPES]=
 {
 	{0,0},
 	{6,50},
-	{6,65},
+	{6,38},
 	{5,28},
-	{6,36},
+	{6,32},
 	{5,22},
-	{6,90},
+	{6,50},
 	{6,55},
 	{6,125},
 	{6,100},
 	{0,45}, //supply
+	{6,310},
+	{6,280},
+	{6,175},
+	{6,215}   
 };
 
 struct s_WStatistics
@@ -237,6 +171,9 @@ const s_WStatistics Wstats[WEAPON_TYPES]=
 	{-1,7,0,1,2,0,0,0,65}, //plasma
 	{1,8,-4,1,2,0,0,0,70}, //quad
 	{-1,5,-1,1,1,1,0,0,0}, //ape
+	{0,9,-5,1,2,0,0,0,0}, //mastiff
+	{1,6,0,1,1,0,0,0,0} // Dart
+
 };
 
 
@@ -318,7 +255,7 @@ public:
 			if((i!=SNIPER)&&(weaps[SCOUTINFANTRY][i]>0))
 				return(0);
 
-		if(weaps[SCOUTINFANTRY][SNIPER]>force[STDINFANTRY]/4)
+		if(weaps[SCOUTINFANTRY][SNIPER]>force[SCOUTINFANTRY]/2)
 			return(0);
 		
 		if( (weaps[STDINFANTRY][SNIPER]>0) || (weaps[ELITEINFANTRY][SNIPER]>0))
@@ -335,7 +272,7 @@ public:
 			return(0);
 
 		// Vehicles
-		if( (force[ARES]>(PTS/1000)+1))
+		if( (force[ARES]+force[WENDIGO]+force[FENRIS]+force[ODIN]+force[LOKI]>(PTS/1000)+1))
 			return(0);
 		for(i=0;i<HARBINGER;i++)
 			if(weaps[ARES][i]>0)
@@ -352,25 +289,21 @@ public:
 			return(0);
 
 		//Sergeants
-		//if( (force[SERGEANT]<((force[STDINFANTRY]+7)/8)+((force[ELITEINFANTRY]+7)/8)/*+(force[BRAWLERINFANTRY]/8)+(force[ARMOREDASSAULT]/8)*/)||
-		//	(force[SERGEANT]>(force[STDINFANTRY]/4+force[ELITEINFANTRY]/4)/*+(force[BRAWLERINFANTRY]/4)+(force[ARMOREDASSAULT]/6)*/))
-		//	return(0);
+		if( (force[SERGEANT]<((force[STDINFANTRY]+7)/8)+((force[ELITEINFANTRY]+7)/8)/*+(force[BRAWLERINFANTRY]/8)+(force[ARMOREDASSAULT]/8)*/)||
+			(force[SERGEANT]>(force[STDINFANTRY]/4+force[ELITEINFANTRY]/4)/*+(force[BRAWLERINFANTRY]/4)+(force[ARMOREDASSAULT]/6)*/))
+			return(0);
 
-		if(force[STDINFANTRY]+force[ELITEINFANTRY]>force[SERGEANT]*7)
+		if(force[STDINFANTRY]+force[ELITEINFANTRY]>force[SERGEANT]*8)
 			return(0);
 
 		if(force[STDINFANTRY]+force[ELITEINFANTRY]<force[SERGEANT]*4)
-			return(0);
-		if((force[STDINFANTRY]>1)&&(force[STDINFANTRY]<4))
-			return(0); 
-		if((force[ELITEINFANTRY]>1)&&(force[ELITEINFANTRY]<4))
 			return(0);
 		//<> Infantry Troups
 
 		if( ((force[ELITEINFANTRY]+7)/8>force[STDINFANTRY]/4) || /*(force[BRAWLERINFANTRY]>force[STDINFANTRY]) || (force[HELLHOUNDINFANTRY]>force[STDINFANTRY]) ||*/
 			((force[SCOUTINFANTRY]+3)/4>force[STDINFANTRY]/4) || /*(force[ARMOREDASSAULT]*2>force[STDINFANTRY]+force[ELITEINFANTRY]+force[BRAWLERINFANTRY]) ||*/
 			((force[ATDDRONE]+2)/3>force[SERGEANT]/*Brawler, armored abziehen!*/) || 
-			(force[HTDDRONE]*2>force[SERGEANT]) || (force[SUPPLYDRONE]>force[SERGEANT]+force[SCOUTINFANTRY]/2+force[SPECIALFORCE]/4 /*brawler, armored...*/)
+			(force[HTDDRONE]*2>force[SERGEANT]) || (force[SUPPLYDRONE]>force[SERGEANT]+force[SCOUTINFANTRY]/2 /*brawler, armored...*/)
 			)
 			return(0);
 
@@ -384,7 +317,7 @@ public:
 		if(force[COMMANDER]>1)
 			return(0);
 
-		Supply=force[SUPPLYDRONE]*4;
+		Supply=force[SUPPLYDRONE]*3;
 //		if(force[SUPPLYDRONE]*4>=force[SPECIALFORCE]+force[STDINFANTRY]+force[ELITEINFANTRY]+force[SCOUTINFANTRY])
 //			Supply=1;
 //		else Supply=0;
@@ -404,8 +337,8 @@ public:
 				fitness+=
 					
 					(
-					((Supply==0)||(unit[i].S==PITBULL))*(Tstats[unit[i].type].RC+Wstats[unit[i].S].RC+Estats[target].size-2+Wstats[unit[i].S].AIMING)
-				   +((Supply>0)&&(unit[i].S!=PITBULL))*
+					(Supply==0)*(Tstats[unit[i].type].RC+Wstats[unit[i].S].RC+Estats[target].size-2+Wstats[unit[i].S].AIMING)
+				   +(Supply>0)*
 			  (10-
 			    (10-(Tstats[unit[i].type].RC+Wstats[unit[i].S].RC+Estats[target].size-1+Wstats[unit[i].S].AIMING))*			
 				(10-(Tstats[unit[i].type].RC+Wstats[unit[i].S].RC+Estats[target].size-1+Wstats[unit[i].S].AIMING))/10
@@ -424,14 +357,14 @@ public:
 					*(Wstats[unit[i].S].USES)
 					*(Wstats[unit[i].S].AREA+1)
 					*(1+Wstats[unit[i].S].AUTO*Estats[target].size);
-					if((Supply>0)&&(unit[i].S!=PITBULL)) Supply--;
+					if(Supply>0) Supply--;
 			}
 			else if(unit[i].type==SPECIALFORCE)
 			{
 				fitness+=
 					(			
-					((Supply==0)||(unit[i].S==PITBULL))*(Tstats[unit[i].type].RC+Wstats[unit[i].S].RC+Estats[target].size-1+(unit[i].S==SNIPER))
-					+((Supply>1)&&(unit[i].S!=PITBULL))
+					(Supply==0)*(Tstats[unit[i].type].RC+Wstats[unit[i].S].RC+Estats[target].size-1+(unit[i].S==SNIPER))
+					+(Supply>1)
 					*(10-( (unit[i].S!=SNIPER)*
 					 (10-(Tstats[unit[i].type].RC+Wstats[unit[i].S].RC+Estats[target].size))
 					*(10-(Tstats[unit[i].type].RC+Wstats[unit[i].S].RC+Estats[target].size))/10)))
@@ -535,6 +468,131 @@ public:
 					*(Wstats[unit[i].S].AREA+1)
 					*(1+Wstats[unit[i].S].AUTO*Estats[target].size);		
 			}
+			else if(unit[i].type==WENDIGO)
+			{
+					fitness+=
+					2*(Tstats[WENDIGO].RC+Wstats[APE].RC+Estats[target].size-2)
+					*((Wstats[APE].DAMAGE)-(Wstats[APE].DAMAGE>Estats[target].life))
+					*((Wstats[APE].POW+5-Estats[target].body)-(Wstats[APE].POW-5>Estats[target].body)*(Wstats[APE].POW+5-Estats[target].body)%10)
+					*( (10-Estats[target].armor-(Wstats[APE].AM))-(Estats[target].armor+Wstats[APE].AM<0)*(10-Estats[target].armor-(Wstats[APE].AM))%10)
+					*(Wstats[APE].USES)
+					*(Wstats[APE].AREA+1)
+					*(1+Wstats[APE].AUTO*(Estats[target].size+1))
+					+
+					2*((Wstats[APE].DAMAGE)-(Wstats[APE].DAMAGE>Estats[target].life))
+					*((Wstats[APE].POW+5-Estats[target].body)-(Wstats[APE].POW-5>Estats[target].body)*(Wstats[APE].POW+5-Estats[target].body)%10)
+					*(Wstats[APE].USES)
+					*(Wstats[APE].AREA+1)
+					*(1+Wstats[APE].AUTO*(Estats[target].size+1));				
+					fitness+= //plasma
+					(Tstats[WENDIGO].RC+Wstats[PLASMA].RC+Estats[target].size-2)
+					*((Wstats[PLASMA].DAMAGE)-(Wstats[PLASMA].DAMAGE>Estats[target].life))
+					*((Wstats[PLASMA].POW+5-Estats[target].body)-(Wstats[PLASMA].POW-5>Estats[target].body)*(Wstats[PLASMA].POW+5-Estats[target].body)%10)					*(Wstats[PLASMA].USES)
+					*(Wstats[PLASMA].AREA+1)
+					+
+					((Wstats[PLASMA].DAMAGE)-(Wstats[PLASMA].DAMAGE>Estats[target].life))
+					*((Wstats[PLASMA].POW+5-Estats[target].body)-(Wstats[PLASMA].POW-5>Estats[target].body)*(Wstats[PLASMA].POW+5-Estats[target].body)%10)
+					*(Wstats[PLASMA].USES)
+					*(Wstats[PLASMA].AREA+1);				
+			}
+			else if(unit[i].type==FENRIS)
+			{
+					fitness+=
+					(Tstats[FENRIS].RC+Wstats[APE].RC+Estats[target].size-2)
+					*((Wstats[APE].DAMAGE)-(Wstats[APE].DAMAGE>Estats[target].life))
+					*((Wstats[APE].POW+5-Estats[target].body)-(Wstats[APE].POW-5>Estats[target].body)*(Wstats[APE].POW+5-Estats[target].body)%10)
+					*( (10-Estats[target].armor-(Wstats[APE].AM))-(Estats[target].armor+Wstats[APE].AM<0)*(10-Estats[target].armor-(Wstats[APE].AM))%10)
+					*(Wstats[APE].USES)
+					*(Wstats[APE].AREA+1)
+					*(1+Wstats[APE].AUTO*(Estats[target].size+1))
+					+
+					((Wstats[APE].DAMAGE)-(Wstats[APE].DAMAGE>Estats[target].life))
+					*((Wstats[APE].POW+5-Estats[target].body)-(Wstats[APE].POW-5>Estats[target].body)*(Wstats[APE].POW+5-Estats[target].body)%10)
+					*(Wstats[APE].USES)
+					*(Wstats[APE].AREA+1)
+					*(1+Wstats[APE].AUTO*(Estats[target].size+1));				
+
+					fitness+=
+					(Tstats[FENRIS].RC+Wstats[QUAD].RC+Estats[target].size-2)
+					*((Wstats[QUAD].DAMAGE)-(Wstats[QUAD].DAMAGE>Estats[target].life))
+					*((Wstats[QUAD].POW+5-Estats[target].body)-(Wstats[QUAD].POW-5>Estats[target].body)*(Wstats[QUAD].POW+5-Estats[target].body)%10)
+					*( (10-Estats[target].armor-(Wstats[QUAD].AM))-(Estats[target].armor+Wstats[QUAD].AM<0)*(10-Estats[target].armor-(Wstats[QUAD].AM))%10)
+					*(Wstats[QUAD].USES)
+					*(Wstats[QUAD].AREA+1)
+					*(1+Wstats[QUAD].AUTO*Estats[target].size)
+					+
+					((Wstats[QUAD].DAMAGE)-(Wstats[QUAD].DAMAGE>Estats[target].life))
+					*((Wstats[QUAD].POW+5-Estats[target].body)-(Wstats[QUAD].POW-5>Estats[target].body)*(Wstats[QUAD].POW+5-Estats[target].body)%10)
+					*(Wstats[QUAD].USES)
+					*(Wstats[QUAD].AREA+1)
+					*(1+Wstats[QUAD].AUTO*Estats[target].size);				
+
+					fitness+=
+					(Tstats[FENRIS].RC+Wstats[MASTIFF].RC+Estats[target].size-2)
+					*((Wstats[MASTIFF].DAMAGE)-(Wstats[MASTIFF].DAMAGE>Estats[target].life))
+					*((Wstats[MASTIFF].POW+5-Estats[target].body)-(Wstats[MASTIFF].POW-5>Estats[target].body)*(Wstats[MASTIFF].POW+5-Estats[target].body)%10)
+					*( (10-Estats[target].armor-(Wstats[MASTIFF].AM))-(Estats[target].armor+Wstats[MASTIFF].AM<0)*(10-Estats[target].armor-(Wstats[MASTIFF].AM))%10)
+					*(Wstats[MASTIFF].USES)
+					*(Wstats[MASTIFF].AREA+1)
+					*(1+Wstats[MASTIFF].AUTO*Estats[target].size)
+					+
+					((Wstats[MASTIFF].DAMAGE)-(Wstats[MASTIFF].DAMAGE>Estats[target].life))
+					*((Wstats[MASTIFF].POW+5-Estats[target].body)-(Wstats[MASTIFF].POW-5>Estats[target].body)*(Wstats[MASTIFF].POW+5-Estats[target].body)%10)
+					*(Wstats[MASTIFF].USES)
+					*(Wstats[MASTIFF].AREA+1)
+					*(1+Wstats[MASTIFF].AUTO*Estats[target].size);				
+
+			}
+			else if(unit[i].type==ODIN)
+			{
+					fitness+=
+					2*(Tstats[ODIN].RC+Wstats[QUAD].RC+Estats[target].size-2)
+					*((Wstats[QUAD].DAMAGE)-(Wstats[QUAD].DAMAGE>Estats[target].life))
+					*((Wstats[QUAD].POW+5-Estats[target].body)-(Wstats[QUAD].POW-5>Estats[target].body)*(Wstats[QUAD].POW+5-Estats[target].body)%10)
+					*( (10-Estats[target].armor-(Wstats[QUAD].AM))-(Estats[target].armor+Wstats[QUAD].AM<0)*(10-Estats[target].armor-(Wstats[QUAD].AM))%10)
+					*(Wstats[QUAD].USES)
+					*(Wstats[QUAD].AREA+1)
+					*(1+Wstats[QUAD].AUTO*Estats[target].size)
+					+
+					2*((Wstats[QUAD].DAMAGE)-(Wstats[QUAD].DAMAGE>Estats[target].life))
+					*((Wstats[QUAD].POW+5-Estats[target].body)-(Wstats[QUAD].POW-5>Estats[target].body)*(Wstats[QUAD].POW+5-Estats[target].body)%10)
+					*(Wstats[QUAD].USES)
+					*(Wstats[QUAD].AREA+1)
+					*(1+Wstats[QUAD].AUTO*Estats[target].size);				
+			}
+			else if(unit[i].type==LOKI)
+			{
+					fitness+=
+					2*(Tstats[LOKI].RC+Wstats[DART].RC+Estats[target].size-2)
+					*((Wstats[DART].DAMAGE)-(Wstats[DART].DAMAGE>Estats[target].life))
+					*((Wstats[DART].POW+5-Estats[target].body)-(Wstats[DART].POW-5>Estats[target].body)*(Wstats[DART].POW+5-Estats[target].body)%10)
+					*( (10-Estats[target].armor-(Wstats[DART].AM))-(Estats[target].armor+Wstats[DART].AM<0)*(10-Estats[target].armor-(Wstats[DART].AM))%10)
+					*(Wstats[DART].USES)
+					*(Wstats[DART].AREA+1)
+					*(1+Wstats[DART].AUTO*Estats[target].size)
+					+
+					2*((Wstats[DART].DAMAGE)-(Wstats[DART].DAMAGE>Estats[target].life))
+					*((Wstats[DART].POW+5-Estats[target].body)-(Wstats[DART].POW-5>Estats[target].body)*(Wstats[DART].POW+5-Estats[target].body)%10)
+					*(Wstats[DART].USES)
+					*(Wstats[DART].AREA+1)
+					*(1+Wstats[DART].AUTO*Estats[target].size);				
+
+					fitness+=
+					(Tstats[LOKI].RC+Wstats[ROTTWEILER].RC+Estats[target].size-2)
+					*((Wstats[ROTTWEILER].DAMAGE)-(Wstats[ROTTWEILER].DAMAGE>Estats[target].life))
+					*((Wstats[ROTTWEILER].POW+5-Estats[target].body)-(Wstats[ROTTWEILER].POW-5>Estats[target].body)*(Wstats[ROTTWEILER].POW+5-Estats[target].body)%10)
+					*( (10-Estats[target].armor-(Wstats[ROTTWEILER].AM))-(Estats[target].armor+Wstats[ROTTWEILER].AM<0)*(10-Estats[target].armor-(Wstats[ROTTWEILER].AM))%10)
+					*(Wstats[ROTTWEILER].USES)
+					*(Wstats[ROTTWEILER].AREA+1)
+					*(1+Wstats[ROTTWEILER].AUTO*Estats[target].size)
+					+
+					2*((Wstats[ROTTWEILER].DAMAGE)-(Wstats[ROTTWEILER].DAMAGE>Estats[target].life))
+					*((Wstats[ROTTWEILER].POW+5-Estats[target].body)-(Wstats[ROTTWEILER].POW-5>Estats[target].body)*(Wstats[ROTTWEILER].POW+5-Estats[target].body)%10)
+					*(Wstats[ROTTWEILER].USES)
+					*(Wstats[ROTTWEILER].AREA+1)
+					*(1+Wstats[ROTTWEILER].AUTO*Estats[target].size);				
+					
+			}
 
 			}
 		}
@@ -561,6 +619,14 @@ else
 	if(rand()%(MAX_UNITS)==0) return(SUPPLYDRONE);
 else 
 	if(rand()%(MAX_UNITS*2)==0) return(ARES);
+else 
+	if(rand()%(MAX_UNITS*2)==0) return(WENDIGO);
+else
+	if(rand()%(MAX_UNITS*2)==0) return(FENRIS);
+else 
+	if(rand()%(MAX_UNITS*2)==0) return(ODIN);
+else 
+	if(rand()%(MAX_UNITS*2)==0) return(LOKI);
 else 
 	return(EMPTY);
 }

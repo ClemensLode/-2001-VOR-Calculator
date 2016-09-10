@@ -1,0 +1,69 @@
+        VOR Calculator
+(UNION Edition, using VOR Rulebook and UNION Force Book)
+
+
+What does this Calculator?
+
+It calculates a UNION force which do the most damage to a certain enemy force using
+genetic algorithms.
+
+Some notes to "VorCalc.exe":
+
+It's kinda easy to use. Just start the program and you see a list of items.
+If you don't understand the stuff listed there, just 'let the program do the dirty work' 
+and watch its process.
+The program will restart 10 times ('runs') to find a good force.
+You can stop the program at any time by just hit the 'any-key' key on your keyboard ;-)
+After 10 runs the program will print out a force which should do some severe damage to 
+the enemy.
+
+Yes you think right, the power of a force also depends on the enemy force, so there is 
+a file called 'enemy.army'. There you can set up your own enemy army (see below).
+
+Oh, yes, one last word:
+This program really finds out the best combination possible, but only within parameters.
+VOR is more than a bunch of numbers, in most cases you just can't use all of your units, there 
+are obstacles or special circumstances which changes the outcome of the battle totally.
+In addition this program completely ignores close combat because it is much more complicated and special 
+abilities, initiative rolls etc. are also "out of range".
+
+What I will add (which is also not integrated in the program yet) is the range & range modificators.
+So this will give another boost to those long range weapons.
+On the other side, close combat fighters will not show themselves up but hide behind those nasty stones, 
+trees etc ;-)
+
+
+
+Some notes to "enemy.army":
+
+The first number, the point value of your army, is calculated this way:
+PV=Number*250+250
+i.e. 
+0=250, 1=500, 2=750, 3=1000,...
+(i.e. : Yes I was too lazy :P)
+In this version the number of enemy units of one type (=count) and the Point Value Number may not
+exceed nine.
+The table should be self-explaining, just enter the statistics of the units 
+(only life, size, armor, body and how many there are in the force).
+
+I set the maximum for different unit types to 10, that should be enough.
+Just change the growler army in the list to your 'own' enemy and test what the program will find out.
+
+One last thing: Don't use any numbers in this file except in the table and the PV (this will
+confuse the program and will create "ghost" units (yes, I think you want
+to test it just to see that, but believe me, it's NOT worth it ;-) Weapons will do 0 damage then).
+
+
+VOR, the Maelstrom, those nice Forcebooks etc. are all copyrighted by its owners
+(FASA, Fanpro etc.)
+
+You may give away this program freely if you publish it with all files
+(VorCalc.exe, read.me and enemy.army)
+
+And don't forget to look www.clawsoftware.de for updates and, if you have
+suggestions, problems etc. just write a nice or (in case of a crashed computer) not-so-nice Email to:
+	ghoul@clawsoftware.de
+
+
+                                        Have a nice day,
+                                                Clemens Lode, 12/26/01
